@@ -1,5 +1,6 @@
 <ace-editor #editor
-  [text]="content"
+  [(text)]="program"
+  (keydown.control.enter)="runProgram($event)"
   mode="python"
   style="height: 90vh; width:100%; overflow: auto;">
 </ace-editor>

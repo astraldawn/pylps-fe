@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { CompilerService } from '../compiler.service';
 import * as ace from 'brace';
 import 'brace/mode/python';
 
@@ -10,7 +11,7 @@ import 'brace/mode/python';
 export class EditorComponent implements OnInit {
 
   @ViewChild('editor') editor;
-  content: string = `from pylps.core import *
+  program: string = `from pylps.core import *
 
 
 initialise(max_time=5)  # Assume all time variables created here
@@ -36,7 +37,7 @@ execute()
 
 show_kb_log()`;
 
-  constructor() { }
+  constructor(private compilerService: CompilerService) { }
 
   ngOnInit() {
   }
@@ -48,15 +49,11 @@ show_kb_log()`;
       //     enableBasicAutoCompletion: true
       // });
 
-      this.editor.getEditor().commands.addCommand({
-          name: "showOtherCompletions",
-          bindKey: "Ctrl-Enter",
-          exec: function (editor) {
-            console.log(editor.getValue())
-          }
-      })
-
       this.editor.getEditor().focus();
+  }
+
+  runProgram(event) {
+    this.compilerService.runProgram(this.program);
   }
 
 }
