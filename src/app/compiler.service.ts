@@ -24,12 +24,17 @@ export class CompilerService {
       'language': this.LANG_ID,
       'stdin': this.DEF_STDIN,
       'code': program
-    }
+    };
 
     this.http.post(this.COMPILER_URL, input).subscribe(
       res => {
-        console.log(res['output']);
-        this.contentSource.next(res['output'])
+        var errors = res['errors'];
+        var output = res['output'];
+        if (errors) {
+          this.contentSource.next(errors);
+        } else {
+          this.contentSource.next(output);
+        }
       },
       err => {
         console.log(err);

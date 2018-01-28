@@ -2,7 +2,11 @@ import * as ace from 'brace';
 import 'brace/mode/python';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
 import { CompilerService } from '../compiler.service';
+import { EgloaderService } from '../egloader.service';
+
 import { PROGRAMS } from '../programs';
 
 @Component({
@@ -13,9 +17,20 @@ import { PROGRAMS } from '../programs';
 export class EditorComponent implements OnInit {
 
   @ViewChild('editor') editor;
-  program: string = PROGRAMS.RECURRENT_FIRE;
+  currentProgram: string;
+  egloaderServiceSubscription: Subscription;
 
-  constructor(private compilerService: CompilerService) { }
+  constructor(
+    private compilerService: CompilerService,
+    private egloaderService: EgloaderService
+   ) {
+    this.currentProgram = PROGRAMS.RECURRENT_FIRE;
+    this.egloaderServiceSubscription = egloaderService.program$.subscribe(
+      newProgram => {
+        this.currentProgram = newProgram;
+      }
+    );
+  }
 
   ngOnInit() {
   }
@@ -29,7 +44,7 @@ export class EditorComponent implements OnInit {
   }
 
   runProgram(event) {
-    this.compilerService.runProgram(this.program);
+    this.compilerService.runProgram(this.currentProgram);
   }
 
 }

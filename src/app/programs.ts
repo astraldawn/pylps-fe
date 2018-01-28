@@ -1,7 +1,9 @@
 export const PROGRAMS = Object.freeze({
 
 SIMPLE_FIRE:
-`from pylps.core import *
+`# SIMPLE FIRE
+
+from pylps.core import *
 
 initialise(max_time=5)  # Assume all time variables created here
 
@@ -27,7 +29,9 @@ execute()
 show_kb_log()`,
 
 RECURRENT_FIRE:
-`from pylps.core import *
+`# RECURRENT FIRE
+
+from pylps.core import *
 
 
 initialise(max_time=10)  # Assume all time variables created here
@@ -65,6 +69,41 @@ refill.initiates(water)
 false_if(eliminate, fire, ~water)
 
 execute(single_clause=False)
+
+show_kb_log()`,
+
+MAP_COLOURING:
+`# MAP COLOURING
+
+from pylps.core import *
+
+initialise(max_time=10)
+
+create_facts('country(_)', 'colour(_)', 'adjacent(_, _)')
+create_actions('paint(_, _)')
+create_variables('X', 'Y', 'C')
+
+country('A')
+country('B')
+country('C')
+country('D')
+
+colour('red')
+colour('yellow')
+colour('blue')
+
+adjacent('C', 'A')
+adjacent('C', 'B')
+adjacent('A', 'B')
+adjacent('A', 'D')
+adjacent('B', 'D')
+
+reactive_rule(country(X)).then(
+    colour(C),
+    paint(X, C).frm(T1, T2)
+)
+
+execute()
 
 show_kb_log()`
 });
