@@ -1,15 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
 export class CompilerService {
+  // Constants
+  private COMPILER_URL: string = 'https://compiler.astraldawn.com/compile';
+  private LANG_ID: number = 0;
+  private DEF_STDIN: string = '';
 
-  constructor(private http: Http) { }
+  // Observable sources
+  private contentSource = new Subject<string>();
+
+  // Observable streams
+  content$ = this.contentSource.asObservable();
+
+  constructor(private http: HttpClient) {
+  }
 
   runProgram(program:string) {
-    console.log('compiler service called')
-    console.log(program)
+    var input = {
+      'language': this.LANG_ID,
+      'stdin': this.DEF_STDIN,
+      'code': program
+    }
+
+    this.http.post(this.COMPILER_URL, input).subscribe(
+      res => {
+        console.log(res['output']);
+        this.contentSource.next(res['output'])
+      },
+      err => {
+        console.log(err);
+      }
+    )
+
+    this.contentSource.next("Exec");
   }
 
 }

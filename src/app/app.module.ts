@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { AceEditorModule } from 'ng2-ace-editor';
 
@@ -7,18 +7,20 @@ import { AceEditorModule } from 'ng2-ace-editor';
 import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
 
-import { CompilerService } from './compiler.service'
+import { CompilerService } from './compiler.service';
+import { DisplayComponent } from './display/display.component'
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    EditorComponent
+    EditorComponent,
+    DisplayComponent
   ],
   imports: [
     AceEditorModule,
     BrowserModule,
-    HttpModule
+    HttpClientModule
   ],
   providers: [CompilerService],
   bootstrap: [AppComponent]

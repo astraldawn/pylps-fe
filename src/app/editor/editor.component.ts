@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CompilerService } from '../compiler.service';
 import * as ace from 'brace';
 import 'brace/mode/python';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CompilerService } from '../compiler.service';
+import { PROGRAMS } from '../programs';
 
 @Component({
   selector: 'app-editor',
@@ -11,31 +13,7 @@ import 'brace/mode/python';
 export class EditorComponent implements OnInit {
 
   @ViewChild('editor') editor;
-  program: string = `from pylps.core import *
-
-
-initialise(max_time=5)  # Assume all time variables created here
-
-create_fluents('fire')
-create_actions('eliminate', 'escape')
-create_events('deal_with_fire')
-
-initially(fire)
-
-reactive_rule(fire.at(T1)).then(
-    deal_with_fire.frm(T1, T2))
-
-goal(deal_with_fire.frm(T1, T2)).requires(
-    eliminate.frm(T1, T2))
-
-goal(deal_with_fire.frm(T1, T2)).requires(
-    escape.frm(T1, T2))
-
-eliminate.terminates(fire)
-
-execute()
-
-show_kb_log()`;
+  program: string = PROGRAMS.RECURRENT_FIRE;
 
   constructor(private compilerService: CompilerService) { }
 
@@ -43,11 +21,9 @@ show_kb_log()`;
   }
 
   ngAfterViewInit() {
-      // this.editor.setTheme("eclipse");
-
-      // this.editor.getEditor().setOptions({
-      //     enableBasicAutoCompletion: true
-      // });
+      this.editor.setOptions({
+         fontSize: "12pt"
+      });
 
       this.editor.getEditor().focus();
   }
