@@ -1,10 +1,20 @@
-<div class="container-fluid">
+<div class="container-fluid" >
   <div class="row">
     <ace-editor #editor
       [(text)]="currentProgram"
-      (keydown.control.enter)="runProgram($event)"
+      (keydown.control.enter)="runProgram()"
       mode="python"
-      style="height: 90vh; width:100%; overflow: auto;">
+      style="height: 85vh; width:100%; overflow: auto;">
     </ace-editor>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="col-md-12 d-flex flex-row-reverse">
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="runProgram()">
+        Compile
+      </button>
+  </div>
   </div>
 </div>

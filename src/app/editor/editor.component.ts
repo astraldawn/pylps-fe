@@ -43,7 +43,7 @@ export class EditorComponent implements OnInit {
       this.editor.getEditor().focus();
   }
 
-  runProgram(event) {
+  runProgram() {
     this.compilerService.runProgram(this.currentProgram);
   }
 

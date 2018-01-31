@@ -103,6 +103,13 @@ reactive_rule(country(X)).then(
     paint(X, C).frm(T1, T2)
 )
 
+false_if(
+    paint(X, C),
+    adjacent(X, Y),
+    adjacent(Y, X),
+    paint(Y, C)
+)
+
 execute()
 
 show_kb_log()`
