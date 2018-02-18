@@ -24,7 +24,7 @@ export class EditorComponent implements OnInit {
     private compilerService: CompilerService,
     private egloaderService: EgloaderService
    ) {
-    this.currentProgram = PROGRAMS.RECURRENT_FIRE;
+    this.currentProgram = PROGRAMS.MAP_COLOURING;
     this.egloaderServiceSubscription = egloaderService.program$.subscribe(
       newProgram => {
         this.currentProgram = newProgram;
