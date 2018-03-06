@@ -159,7 +159,75 @@ execute(solution_preference='maximum')
 # uncomment this line for a different solution
 # execute(solution_preference='first')
 
-show_kb_log()
-`
+show_kb_log()`,
+
+MULTI_PATH:
+`# MULTI_PATH
+from pylps.core import *
+
+initialise(max_time=5)
+
+create_actions('say(_, _)')
+create_events('respond(_, _)')
+create_facts('arc(_, _)', 'ask(_, _)')
+create_variables('X', 'Y', 'Z')
+
+arc('a', 'b')
+arc('b', 'c')
+arc('a', 'd')
+arc('d', 'e')
+arc('e', 'c')
+
+ask('a', 'c')
+
+reactive_rule(ask(X, Y)).then(
+    respond(X, Y).frm(T1, T2))
+
+goal(respond(X, Y).frm(T1, T2)).requires(
+    arc(X, Y), say(X, Y).frm(T1, T2))
+
+goal(respond(X, Y).frm(T1, T3)).requires(
+    arc(X, Z),
+    respond(Z, Y).frm(T1, T2),
+    say(X, Z).frm(T2, T3))
+
+execute(single_clause=False, n_solutions=-1)
+
+show_kb_log()`,
+
+LIST_TUPLE:
+`# LIST_TUPLE
+from pylps.core import *
+from pylps.lps_data_structures import LPSTuple
+
+initialise(max_time=5)
+
+create_actions('show(_)', 'show_tuple(_, _)')
+create_events('handle_list(_)')
+create_variables('X', 'Y', 'XS')
+
+reactive_rule(True).then(
+    handle_list([
+        ('a', 1),
+        ('b', 2),
+        ('c', 3),
+        ('d', 4),
+    ]).frm(T1, T2)
+)
+
+goal(handle_list([LPSTuple((X, Y))]).frm(T1, T2)).requires(
+    show(X).frm(T1, T2),
+    show(Y).frm(T1, T2)
+)
+
+goal(handle_list([LPSTuple((X, Y)) | XS]).frm(T1, T2)).requires(
+    show_tuple(X, Y).frm(T1, T2),
+    handle_list(XS).frm(T1, T2)
+)
+
+execute(single_clause=False)
+
+show_kb_log()`,
+
 
 });
