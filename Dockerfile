@@ -9,5 +9,6 @@ RUN ng build --prod --build-optimizer
 FROM nginx:alpine
 LABEL author="Mark Lee"
 COPY --from=angular-built /usr/src/app/dist /usr/share/nginx/html
+COPY nginx-default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;" ]
