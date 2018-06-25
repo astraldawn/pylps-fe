@@ -241,7 +241,7 @@ create_events(
     'clear(_)', 'make_tower(_)',
     'make_on(_, _)', 'make_clear(_)',
 )
-create_variables('Block', 'Block1', 'Place', 'Places')
+create_variables('Block', 'Block1', 'Place', 'Places', 'A', 'B', 'C')
 
 initially(
     location('f', 'floor'), location('b', 'f'), location('e', 'b'),
@@ -278,7 +278,7 @@ goal(
     make_on(Block, Place).frm(T2, T3),
 )
 
-goal(make_on(Block, Place).frm(T1, T2)).requires(
+goal(make_on(Block, Place).frm(T1, T4)).requires(
     ~location(Block, Place).at(T1),
     make_clear(Place).frm(T1, T2),
     make_clear(Block).frm(T2, T3),
@@ -301,7 +301,7 @@ goal(make_clear(Block).frm(T1, T2)).requires(
 move(Block, Place).initiates(location(Block, Place))
 move(Block, _).terminates(location(Block, Place))
 
-execute()
+execute(strategy=STRATEGY_GREEDY, debug=False)
 
 show_kb_log()
 `,
@@ -386,5 +386,133 @@ false   swap(X, N1, Y, N2), swap(Y, N2, Z, N3).
 `,
 
 
+RIVER_CROSSING: `from pylps.core import *
+
+initialise(max_time=10)
+
+create_actions('show(_)', 'valid(_, _)', 'say(_, _)')
+create_events('river(_, _, _, _)', 'member(_, _)')
+create_facts('inp(_, _)', 'crossing(_, _, _)')
+create_variables(
+    'A', 'B', 'C', 'P', 'V', 'X', 'Y', 'Z', 'Tail', 'D',
+    'Action', 'Start', 'End', 'Plan',
+)
+
+inp(['l', 'l', 'l', 'l'], ['r', 'r', 'r', 'r'])
+
+crossing(['l', X, Y, Z], ['r', X, Y, Z], 'farmer_cross')
+crossing(['r', X, Y, Z], ['l', X, Y, Z], 'farmer_back')
+
+crossing(['l', 'l', Y, Z], ['r', 'r', Y, Z], 'fox_cross')
+crossing(['r', 'r', Y, Z], ['l', 'l', Y, Z], 'fox_back')
+
+crossing(['l', X, 'l', Z], ['r', X, 'r', Z], 'goose_cross')
+crossing(['r', X, 'r', Z], ['l', X, 'l', Z], 'goose_back')
+
+crossing(['l', X, Y, 'l'], ['r', X, Y, 'r'], 'beans_cross')
+crossing(['r', X, Y, 'r'], ['l', X, Y, 'l'], 'beans_back')
+
+reactive_rule(inp(Start, End)).then(
+    river(Start, End, [Start], P).frm(T1, T2),
+    show(P).frm(T2, T3),
+)
+
+goal(river(A, A, _, []).frm(T, T))
+
+goal(river(A, B, V, P).frm(T1, T3)).requires(
+    crossing(A, C, Action),
+    C.not_in(V),
+    valid(C, Action).frm(T1, T2),
+    river(C, B, [C | V], Plan).frm(T2, T3),
+    P.is_([Action | Plan]),
+)
+
+false_if(valid([A, B, B, C], D), A != B)
+false_if(valid([A, C, B, B], D), A != B)
+
+execute(debug=False, strategy=STRATEGY_GREEDY)
+
+show_kb_log()
+`,
+
+DEMO_CODE: `from pylps.core import *
+
+
+initialise(max_time=5)
+
+create_fluents('fire', 'water')
+create_actions('eliminate', 'escape', 'ignite(_)')
+create_events('deal_with_fire')
+create_variables('X')
+create_facts('flammable(_)')
+
+
+# FILL IN HERE
+
+execute()
+show_kb_log()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+observe(ignite('bed').frm(1, 2))
+observe(ignite('sofa').frm(3, 4))
+
+initially(water)
+
+flammable('bed')
+flammable('sofa')
+
+reactive_rule(fire.at(T1)).then(
+    deal_with_fire.frm(T1, T2))
+
+goal(deal_with_fire.frm(T1, T2)).requires(
+    eliminate.frm(T1, T2))
+
+goal(deal_with_fire.frm(T1, T2)).requires(
+    escape.frm(T1, T2))
+
+ignite(X).initiates(fire).iff(flammable(X))
+
+eliminate.terminates(fire)
+eliminate.terminates(water)
+
+false_if(eliminate, fire, ~water)
+
+execute()
+show_kb_log()
+'''
+`,
 
 });

@@ -63,10 +63,11 @@ export class DisplayComponent implements OnDestroy {
         if (item[i] === ')' || item[i] === ']') openBrace = false
         if (item[i] === ',' && !openBrace) indices.push(i)
       }
+      let last_brace = indices.length - 1
       const type = item.slice(0, indices[0]).replace(/'/g, "")
       const name = item.slice(indices[0] + 2, indices[1]).replace(/'/g, "")
-      const args = item.slice(indices[1] + 2, indices[2]).replace(/'/g, "")
-      const time = item.slice(indices[2] + 2, )
+      const args = item.slice(indices[1] + 2, indices[last_brace]).replace(/'/g, "")
+      const time = item.slice(indices[last_brace] + 2, )
 
       const time_arr = time.split(',')
 
